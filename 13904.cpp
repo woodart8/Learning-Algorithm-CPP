@@ -5,10 +5,10 @@ using namespace std;
 
 int n;
 bool ch[1001];
-struct Hw {
-	int day, point;
-	bool operator<(const Hw& b) const {
-		return point < b.point;
+
+struct cmp {
+	bool operator()(pair<int,int> a, pair<int,int> b) {
+		return a.second < b.second;
 	}
 };
 
@@ -16,7 +16,7 @@ int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 	
-	priority_queue<Hw> pq;
+	priority_queue<pair<int,int>, vector<pair<int,int>>, cmp> pq;
 
 	cin >> n;
 	for (int i = 0; i < n; i++) {
@@ -27,8 +27,8 @@ int main() {
 
 	int ans = 0;
 	while (!pq.empty()) {
-		int day = pq.top().day;
-		int point = pq.top().point;
+		int day = pq.top().first;
+		int point = pq.top().second;
 		pq.pop();
 
 		while (ch[day] && day>=1) {
