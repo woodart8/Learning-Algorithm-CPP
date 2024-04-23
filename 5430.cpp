@@ -1,80 +1,74 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 #include <string>
+#include <algorithm>
+#include <deque>
+
 using namespace std;
 
-int main(){
-    ios_base::sync_with_stdio(false);
+int main() {
+    ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
+    int T;
+    cin >> T;
+    while(T--) {
+        string s; //명령어
+        int n; //숫자 개수
+        string t; // 배열
+        deque<int> dq; //배열에서 숫자만 빼서 저장
+        bool rev = false; //뒤집어져있는지 여부
+        bool error = false; //에러발생 여부
 
-    int test_case;
-    cin>>test_case;
-    for(int i=0; i<test_case; i++){
-        int n;
-        vector<int> v;
-        string s,func,temp="";
-        bool reverse = false;
-        bool error = false;
-        cin>>func;
-        cin>>n;
-        cin>>s;
-        for(int j=0; j<s.size(); j++){
-            if(isdigit(s[j])){
-                temp+=s[j];
+        cin >> s >> n >> t;
+
+        string temp = "";
+        for(auto c : t) {
+            if(isdigit(c)) {
+                temp = temp + c;
             }
             else {
-                if(!temp.empty()){
-                    v.push_back(stoi(temp));
-                    temp="";
+                if(!temp.empty()) {
+                    dq.push_back(stoi(temp));
+                    temp = "";
                 }
-            }
-        }
-        
-        for(int j=0; j<func.size(); j++){
-            if(func[j]=='R'){
-                if(reverse==false){
-                    reverse = true;
-                }
-                else{
-                    reverse = false;
-                }
-            }
-            else{
-                if(v.empty()){
-                    cout<<"error"<<'\n';
-                    error=true;
-                    break;
-                }
-                if(reverse)
-                    v.pop_back();
-                else
-                    v.erase(v.begin());
             }
         }
 
-        if (!error) {
+        for(auto c : s) {
+            if(c == 'R') rev = !rev;
+            else if(c == 'D') {
+                if(!dq.empty()) {
+                    if(rev == false) {
+                        dq.pop_front();
+                    }
+                    else dq.pop_back();
+                }
+                else {
+                    error = true;
+                    break;
+                }
+            }
+        }
+
+        if(!error) {
             cout << '[';
-        }
-        if (reverse && !v.empty()) {
-            for (auto o = v.rbegin(); o != v.rend(); o++) {
-                if (o == v.rend() - 1)
-                    cout << *o;
-                else
-                cout << *o << ',';
+            while(!dq.empty()) {
+                if(rev == false) {
+                    cout << dq.front();
+                    dq.pop_front();
+                    if(!dq.empty()) cout << ',';
+                }
+                else {
+                    cout << dq.back();
+                    dq.pop_back();
+                    if(!dq.empty()) cout << ','; 
+                }
             }
+            cout << ']' << endl;
         }
-        else if (!reverse&&!v.empty()){
-            for (auto o = v.begin(); o != v.end(); o++) {
-                if (o == v.end() - 1)
-                    cout << *o;
-                else
-                cout << *o << ',';
-            }
-        }
-        if (!error) {
-            cout << "]\n";
+        else {
+            cout << "error" << endl;
         }
     }
+    return 0;
 }
