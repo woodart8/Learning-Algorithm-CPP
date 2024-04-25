@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstring>
-#include <queue>
 
 using namespace std;
 
@@ -14,23 +13,15 @@ bool visited[MAX][MAX];
 int dx[4] = {-1,1,0,0};
 int dy[4] = {0,0,-1,1};
 
-void bfs(int x, int y) {
-    queue<pair<int,int>> q;
-    q.push({x, y});
+void dfs(int x, int y) {
     visited[x][y] = true;
-
-    while(!q.empty()) {
-        int curx = q.front().first;
-        int cury = q.front().second;
-        q.pop();
-        for(int i=0; i<4; i++) {
-            int nx = curx + dx[i];
-            int ny = cury + dy[i];
-            if(nx < 0 || ny < 0 || nx >= M || ny >= N || visited[nx][ny] || map[nx][ny] == 0) continue;
-            visited[nx][ny] = true;
-            q.push({nx,ny});
-        }
+    for(int i=0; i<4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if(nx < 0 || ny < 0 || nx >= M || ny >= N || visited[nx][ny] || map[nx][ny]==0) continue;
+        dfs(nx,ny);
     }
+    return;
 }
 
 int main() {
@@ -49,7 +40,7 @@ int main() {
         for(int i=0; i<M; i++) {
             for(int j=0; j<N; j++) {
                 if(!visited[i][j] && map[i][j] == 1) {
-                    bfs(i,j);
+                    dfs(i,j);
                     cnt++;
                 }
             }
