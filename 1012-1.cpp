@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <stack>
 
 using namespace std;
 
@@ -20,6 +21,24 @@ void dfs(int x, int y) {
         int ny = y + dy[i];
         if(nx < 0 || ny < 0 || nx >= M || ny >= N || visited[nx][ny] || map[nx][ny]==0) continue;
         dfs(nx,ny);
+    }
+}
+
+void dfs_stack(int x, int y) {
+    stack<pair<int,int>> S;
+    S.push({x,y});
+    visited[x][y] = true;
+    while(!S.empty()) {
+        int curx = S.top().first;
+        int cury = S.top().second;
+        S.pop();
+        for(int i=0; i<4; i++) {
+            int nx = curx + dx[i];
+            int ny = cury + dy[i];
+            if(nx < 0 || ny < 0 || nx >= M || ny >= N || visited[nx][ny] || map[nx][ny]==0) continue;
+            visited[nx][ny] = true;
+            S.push({nx,ny});
+        }
     }
     return;
 }

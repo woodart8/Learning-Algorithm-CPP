@@ -6,12 +6,12 @@ using namespace std;
 
 #define MAX 50
 #define endl '\n'
-int T;
-int M,N,K;
-int map[MAX][MAX];
-bool visited[MAX][MAX];
+int T; //테스트 케이스
+int M,N,K; // 가로, 세로, 배추개수
+int map[MAX][MAX]; // 지도
+bool visited[MAX][MAX]; //방문 여부
 
-int dx[4] = {-1,1,0,0};
+int dx[4] = {-1,1,0,0}; 
 int dy[4] = {0,0,-1,1};
 
 void bfs(int x, int y) {
