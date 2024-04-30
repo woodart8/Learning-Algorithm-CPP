@@ -1,28 +1,19 @@
 #include <iostream>
+#include <cstring>
 #include <queue>
 
 using namespace std;
-#define MAX 301
+#define MAX 300
 
 int T,I;
 int current_x,current_y,target_x,target_y;
 int arr[MAX][MAX];
-int visited[MAX][MAX];
+bool visited[MAX][MAX];
 int dx[] = {1,2,2,1,-1,-2,-2,-1};
 int dy[] = {2,1,-1,-2,-2,-1,1,2};
-queue<pair<int,int>> q;
-
-void reset() {
-	while (!q.empty()) q.pop();
-	for (int i = 0; i < MAX; i++) {
-		for (int j = 0; j < MAX; j++) {
-			visited[i][j] = 0;
-			arr[i][j] = 0;
-		}
-	}
-}
 
 void bfs(int x,int y) {
+    queue<pair<int,int>> q;
     q.push({x,y});
     visited[x][y]=true;
     while(!q.empty()) {
@@ -31,10 +22,7 @@ void bfs(int x,int y) {
         q.pop();
         if(a==target_x && b==target_y) {
             cout <<arr[a][b] << "\n";
-            while(!q.empty()) {
-                q.pop();
-            }
-            break;
+            return;
         }
         for(int i=0;i<8;i++) {
             int na = a + dx[i];
@@ -51,11 +39,12 @@ void bfs(int x,int y) {
 int main() {
     cin >> T;
     for(int i=0;i<T;i++) {
+        memset(arr, 0, sizeof(arr));
+        memset(visited, false, sizeof(visited));
         cin >> I;
         cin >> current_x >> current_y;
         cin >> target_x >> target_y;
 
         bfs(current_x,current_y);
-        reset();
     }
 }
