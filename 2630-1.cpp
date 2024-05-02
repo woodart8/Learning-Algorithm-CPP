@@ -6,24 +6,24 @@ int N;
 bool map[128][128];
 int white, blue;
 
-bool checkSameColor(int x, int y, int n, int temp) {
+bool isSameColor(int x, int y, int n, int temp) { // 시작 map[x][y], 한 변의 길이 n, 비교 기준 temp
     for(int i=x; i<x+n; i++) {
         for(int j=y; j<y+n; j++) {
-            if(temp != map[i][j]) return false;
+            if(temp != map[i][j]) return false; //기준과 다르면 false
         }
     }
-    return true;
+    return true; //모두 동일하면 true
 }
 
-void Solve(int x, int y, int n) {
+void Solve(int x, int y, int n) { // 시작 map[x][y], 한 변의 길이 n
     bool temp = map[x][y];
-    if(!checkSameColor(x,y,n,temp)) {
+    if(!isSameColor(x,y,n,temp)) { // 색이 다른게 있으면 4등분
         Solve(x, y, n/2);
         Solve(x+n/2, y, n/2) ;
         Solve(x, y+n/2, n/2);
         Solve(x+n/2, y+n/2, n/2);
     }
-    else {
+    else { // 모두 색이 동일하면 종이 색에 따라서 (color)++
         if(temp == 0) white++;
         else blue++;
     }
