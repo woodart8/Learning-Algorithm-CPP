@@ -2,38 +2,34 @@
 
 using namespace std;
 
+int npow(int n, int m){
+    int r=1;
+    for(int i=0;i<m;i++){
+        r*=n;
+    }
+    return r;
+}
+
 int z(int n, int r, int c){
-    int l = 1<<(n-1);
-    int sum = 0;
-    while(n>=1) {
-        if(n==1){
-            sum += 2*r+c;
-            return sum;
-        }
-        if(r<l){
-            if(c<l){
-                n--;
-            }
-            else{
-                sum += l*l;
-                n--;
-                c -= l;
-            }
+    if(n==1){
+        return 2*r+c;
+    }
+    int l=npow(2, n-1);
+    if(r<l){
+        if(c<l){
+            return z(n-1, r, c);
         }
         else{
-            if(c<l){
-                sum += 2*l*l;
-                n--;
-                r -= l;
-            }
-            else{
-                sum += 3*l*l;
-                n--;
-                r -= l;                
-                c -= l;
-            }
+            return l*l + z(n-1, r, c-l);
         }
-        l = l >> 1;
+    }
+    else{
+        if(c<l){
+            return 2*l*l + z(n-1, r-l, c);
+        }
+        else{
+            return 3*l*l + z(n-1, r-l, c-l);
+        }
     }
 }
 
