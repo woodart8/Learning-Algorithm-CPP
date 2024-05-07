@@ -5,9 +5,9 @@ using namespace std;
 
 int N,M;
 vector<int> v;
-vector<int> ans(8);
+vector<int> ans(7);
 
-void BT(int k, int idx) {
+void BT(int k) {
     if(k == M) {
         for(int i=0; i<M; i++) {
             cout << ans[i] << ' ';
@@ -16,9 +16,9 @@ void BT(int k, int idx) {
         return;
     }
 
-    for(int i=idx; i<N; i++) {
+    for(int i=0; i<N; i++) {
         ans[k] = v[i];
-        BT(k+1, i+1);
+        BT(k+1);
     }
 }
 int main() {
@@ -32,6 +32,6 @@ int main() {
 
     sort(v.begin(), v.end());
 
-    BT(0, 0);
+    BT(0);
     return 0;
 }
