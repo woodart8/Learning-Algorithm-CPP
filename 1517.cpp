@@ -5,8 +5,8 @@ using namespace std;
 const int INF = 2e9;
 const int inf = 1e9;
 
-long long sorted[500001];
-vector<long long> arr;
+int sorted[500001];
+vector<int> arr;
 long long ans = 0;
 
 void merge(int left, int mid, int right) {
