@@ -6,21 +6,21 @@ using namespace std;
 int T;
 int ans;
 
-void BT(string s, int k) {
+void BT(int idx, string s, int k) {
     if(k == 0) {
         ans = max(ans, stoi(s));
         return;
     }
-    for(int i=0; i<s.size()-1; i++) {
+    for(int i=idx; i<s.size()-1; i++) {
         for(int j=i+1; j<s.size(); j++){
             if(s[i] <= s[j]) {
                 swap(s[i],s[j]);
-                BT(s,k-1);
+                BT(i,s,k-1);
                 swap(s[i],s[j]);
             }
             if(i == s.size()-2 && j == s.size()-1) {
                 swap(s[i],s[j]);
-                BT(s,k-1);
+                BT(i,s,k-1);
                 swap(s[i],s[j]);
             }
         }
@@ -35,7 +35,7 @@ int main() {
         string s;
         int k;
         cin >> s >> k;
-        BT(s,k);
+        BT(0,s,k);
         cout << '#' << t << ' ' << ans << '\n';
         t++;
     }
