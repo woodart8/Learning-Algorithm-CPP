@@ -5,8 +5,8 @@
 using namespace std;
 
 int K;
-vector<pair<bool, string>> wheel; // first: 돌릴 수 있는 바퀴인지, second: 바퀴 상태
-bool visited[4];
+vector<pair<bool, string>> wheel; // first: 회전 가능 여부, second: 바퀴 상태
+bool visited[4]; //방문 배열
 
 void turn(int num, int dir) {
     if(dir == 1) {
@@ -32,7 +32,7 @@ void move(int num, int dir) {
             wheel[num+1].first = true;
         }
         turn(num, dir);
-        if(wheel[num+1].first && !visited[num+1]) {
+        if(wheel[num+1].first && !visited[num+1]) { // 회전 가능하고 방문한 적이 없는 바퀴이면
             move(num+1, -1 * dir);
         }
     }
@@ -85,7 +85,7 @@ int main() {
 
     int ans = 0;
     for(int i=0; i<=3; i++) {
-        if(wheel[i].second[0] == '1') ans = ans + (1 << i);
+        if(wheel[i].second[0] == '1') ans = ans + (1 << i); //12시방향이 S극일 경우 2의 i제곱만큼 점수 더함
     }
     cout << ans << endl;
     return 0;
