@@ -6,86 +6,120 @@
 using namespace std;
 
 int N;
-int map[21][21];
-int region[21][21];
-int population[6];
+int A[21][21];
 int ans = 1e9;
 
-void fill_region(int x, int y, int d1, int d2) {
-    for(int i=1; i<=N; i++) {
-        for(int j=1; j<=N; j++) {
-            region[i][j] = 5;
-        }
-    }
+void input() {
+    scanf("%d", &N);
 
-    int Area = (x == 1) ? 1 : 0;
-    for(int i=1; i<x+d1; i++) {
-        if(i >= x) Area++; 
-        for(int j=1; j<=y-Area; j++) {
-            region[i][j] = 1;
-        }
-    }
-
-    Area = (y+d2 == N) ? 1 : 0;
-    for(int i=N; i>y; i--) {
-        if(i <= y+d2) Area++;
-        for(int j=1; j<=x+d2-Area; j++) {
-            region[j][i] = 2;
-        }
-    }
-
-    Area = (y-d1 == 1) ? 1 : 0;
-    for(int i=1; i<y-d1+d2; i++) {
-        if(i >= y-d1) Area++;
-        for(int j=N; j>=x+d1+Area; j--) {
-            region[j][i] = 3;
-        }
-    }
-
-    Area = (x+d1+d2 == N) ? 1 : 0;
-    for(int i=N; i>x+d2; i--) {
-        if(i <= x+d1+d2) Area++;
-        for(int j=N; j>=y-d1+d2+Area; j--) {
-            region[i][j] = 4;
+    for (int i=1; i<=N; i++) {
+        for (int j=1; j<=N; j++) {
+            scanf("%d", &A[i][j]);
         }
     }
 }
 
-void Bruteforce(int x, int y, int d1, int d2) {
-    if(x < 1 || x+d1+d2 > N) return;
-    if(y-d1 < 1 || y+d2 > N) return;
+void coloring(int x, int y, int d1, int d2) {
+    int area[21][21] = {0};
+    int cnt[6] = {0};
+    int dy = y;
 
-    memset(region, 0, sizeof(region));
-    memset(population, 0, sizeof(population));
+    // 1번 경계선
+    for (int dx=x; dx<=x+d1; dx++, dy--) {
+        area[dx][dy] = 5;
+    }
 
-    fill_region(x,y,d1,d2);
+    // 2번 경계선
+    dy = y;
+    for (int dx=x; dx<=x+d2; dx++, dy++) {
+        area[dx][dy] = 5;
+    }
 
-    for(int i=1; i<=N; i++) {
-        for(int j=1; j<=N; j++) {
-            population[region[i][j]] += map[i][j];
+    // 3번 경계선
+    dy = y-d1;
+    for (int dx=x+d1; dx<=x+d1+d2; dx++, dy++) {
+        area[dx][dy] = 5;
+    }
+
+    // 4번 경계선
+    dy = y+d2;
+    for (int dx=x+d2; dx<=x+d1+d2; dx++, dy--) {
+        area[dx][dy] = 5;
+    }
+
+    // 1번 구역 색칠
+    for (int r=1; r<x+d1; r++) {
+        for (int c=1; c<=y; c++) {
+            if (area[r][c] == 5) break;
+            area[r][c] = 1;
         }
     }
-    sort(population+1, population+6);
-    ans = min(ans, population[5]-population[1]);
+
+    // 2번 구역 색칠
+    for (int c=y+1; c<=N; c++) {
+        for (int r=1; r<=x+d2; r++) {
+            if (area[r][c] == 5) break;
+            area[r][c] = 2;
+        }
+    }
+
+    // 3번 구역 색칠
+    for (int c=1; c<y-d1+d2; c++) {
+        for (int r=N; r>=x+d1; r--) {
+            if (area[r][c] == 5) break;
+            area[r][c] = 3;
+        }
+    }
+
+    // 4번 구역 색칠
+    for (int r=N; r>x+d2; r--) {
+        for (int c=N; c>=y-d1+d2; c--) {
+            if (area[r][c] == 5) break;
+            area[r][c] = 4;
+        }
+    }
+
+    // 5번 구역 색칠
+    for (int r=1; r<=N; r++) {
+        for (int c=1; c<=N; c++) {
+            if(!area[r][c]) area[r][c] = 5;
+            cnt[area[r][c]] += A[r][c];
+        }
+    }
+
+    int minN = 1e9;
+    int maxN = 0;
+    
+    // 인구 수 최대, 최소 계산
+    for (int i=1; i<=5; i++) {
+        if (cnt[i] < minN) minN = cnt[i];
+        if (cnt[i] > maxN) maxN = cnt[i];
+    }
+
+    // 정답 갱신
+    ans = min(ans, maxN-minN);
 }
 
-int main() {
-    cin >> N;
-    for(int i=1; i<=N; i++){
-        for(int j=1; j<=N; j++) {
-            cin >> map[i][j];
-        }
-    }
-
-    for(int i=1; i<=N; i++) {
-        for(int j=2; j<=N; j++) {
-            for(int d1 = 1; d1 < j; d1++) {
-                for(int d2 = 1; d2 <= N-j; d2++) {
-                    Bruteforce(i,j,d1,d2);
+void solve() {
+    for (int x=1; x<=N; x++) {
+        for (int y=1; y<=N; y++) {
+            for (int d1=1; d1<=N; d1++) {
+                for (int d2=1; x+d1+d2<=N && y-d1>=1 && y+d2<=N; d2++) {
+                    coloring(x,y,d1,d2);
                 }
             }
         }
     }
-    cout << ans << '\n';
+}
+
+void output() {
+    printf("%d", ans);
+}
+
+int main() {
+    input();
+    solve();
+    output();
+
     return 0;
 }
