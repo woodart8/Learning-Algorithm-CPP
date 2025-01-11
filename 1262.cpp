@@ -15,6 +15,14 @@ char getAlpha(int n, int x, int y) {
 
     if (dx + dy >= n) return '.';
 
+    // // 올라갔다 내려갔다
+    // int index = (dx + dy) % 50;
+    // if (index < 26) {
+    //     return 'a' + index;
+    // } else {
+    //     return 'z' - (index - 26 + 1);
+    // }
+
     return 'a' + (dx + dy) % 26;
 }
 
