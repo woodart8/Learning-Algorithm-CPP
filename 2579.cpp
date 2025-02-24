@@ -3,19 +3,23 @@
 using namespace std;
 
 int n;
-int dist[301];
-int value[301];
+int dp[301][2];
+int val[301];
 
 int main(){
     cin>>n;
-    for(int i=1; i<=n; i++){
-        cin>>value[i];
+
+    for (int i=1; i<=n; i++) {
+        cin >> val[i];
     }
 
-    dist[1]=value[1];
-    dist[2]=value[1]+value[2];
-    for(int i=3; i<=n; i++){
-        dist[i] = value[i]+max(dist[i-2],dist[i-3]+value[i-1]);
+    dp[1][0] = dp[1][1] = val[1];
+
+    for (int i=2; i<=n; i++) {
+        dp[i][0] = val[i] + dp[i-1][1];
+        dp[i][1] = val[i] + max(dp[i-2][0],dp[i-2][1]);
     }
-    cout<<dist[n];
+
+    cout << max(dp[n][0], dp[n][1]) << '\n';
+    
 }
