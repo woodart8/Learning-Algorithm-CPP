@@ -1,28 +1,23 @@
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
-long long len[101];
-int t,n;
-vector<long long> v;
+int T, N;
+long long dp[101];
 
 int main(){
-    cin>>t;
-    len[1]=1;
-    len[2]=1;
-    len[3]=1;
-    len[4]=2;
-    for(int i=5; i<=100; i++){
-        len[i]=len[i-1]+len[i-5];
-    }
-    while(t--){
-        cin>>n;
-        v.push_back(len[n]);
+    cin >> T;
+
+    dp[1] = 1;
+    dp[2] = 1;
+    for (int i=3; i<=100; i++) {
+        dp[i] = dp[i-2] + dp[i-3];
     }
 
-    for(auto it: v){
-        cout<<it<<'\n';
+    while(T--) {
+        cin >> N;
+        cout << dp[N] << '\n';
     }
-
     return 0;
 }
