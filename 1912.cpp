@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -8,16 +7,15 @@ int dp[100001];
 
 int main() {
     cin >> N;
-    for(int i=1; i<=N; i++) {
-        int num;
-        cin >> num;
-        dp[i] = max(dp[i-1]+num, num);
-    }
 
     int ans = INT32_MIN;
-    for(int i=1; i<=N; i++) {
-        ans = max(dp[i],ans);
+    for (int i=1; i<=N; i++) {
+        cin >> dp[i];
+        dp[i] = max(dp[i], dp[i] + dp[i-1]);
+        ans = max(ans, dp[i]);
     }
+
     cout << ans << '\n';
+
     return 0;
 }
