@@ -5,9 +5,13 @@
 
 using namespace std;
 
+#define MAXN 200000
+#define MAXV 1e9
+#define MINV -1e9
+
 int N;
-int parent[200000];
-int rk[200000];
+int parent[MAXN];
+int rk[MAXN];
 vector<pair<pair<int,int>, int>> v;
 
 int findParent(int a) {
@@ -59,6 +63,7 @@ void solve() {
     vector<int> vx; // x 좌표만 저장
     vector<int> vy; // y 좌표만 저장
     vector<pair<pair<int,int>, int>> t(v.begin(), v.end()); // 원본 복사 배열
+    unordered_map<int, int> map; // <부모 인덱스, 개수>
 
     for (int i=0; i<N; i++) {
         parent[i] = i;
@@ -84,29 +89,27 @@ void solve() {
         unionNode(t[i].second, t[idx].second);
     }  // lower_bound로 vy의 i번째 y좌표값에서 가장 작은 idx 찾고 t[i]와 t[idx]의 v기준 인덱스 union
 
-    unordered_map<int, int> map;
-
     for (int i=0; i<N; i++) {
         map[findParent(i)]++;
     } // 그룹별 점 개수 저장
 
     vector<pair<int,int>> group(map.begin(), map.end());
     
-     // 그룹이 1개인 경우
+    // 그룹이 1개인 경우
     if (group.size() == 1) {
-        int k = 1e9 + 1; // 최댓값 + 1
-        for (int i=0; i<vy.size()-1; i++) {
+        int k = MAXV + 1; // 최댓값 + 1
+        for (int i=0; i<N-1; i++) {
             if (vy[i] < vy[i+1]-1) {
                 k = vy[i+1]-1;
                 break;
             } // 간격이 2이상 차이난다면 그 사이는 비어있으므로 k값 갱신 후 break
         }
 
-        if (k == 1e9 + 1) {
-            if (vy[0]-1 > -1e9) {
+        if (k == MAXV + 1) {
+            if (vy[0]-1 > MINV) {
                 k = vy[0]-1;
             } else {
-                k = vy[vy.size()-1]+1;
+                k = vy[N-1]+1;
             }
         } // 갱신되지 않았다면 20만개의 점이 모두 1차이로 붙어있다는 것이므로 가장 작은 y좌표가 -10억보다 크면
         // k는 가장 작은 y좌표-1, -10억이라면 가장 큰 y좌표+1 
