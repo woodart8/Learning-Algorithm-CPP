@@ -32,7 +32,7 @@ void unionNode(int a, int b) {
 }
 
 bool cmpx(pair<pair<int,int>, int> a, pair<pair<int,int>, int> b) {
-    if (a.first.first != b.first.first)return a.first.first < b.first.first;
+    if (a.first.first != b.first.first) return a.first.first < b.first.first;
     return a.second < b.second;
 }
 
@@ -90,9 +90,10 @@ void solve() {
         map[findParent(i)]++;
     } // 그룹별 점 개수 저장
 
-    vector<pair<int,int>> temp(map.begin(), map.end());
+    vector<pair<int,int>> group(map.begin(), map.end());
     
-    if (temp.size() == 1) {
+     // 그룹이 1개인 경우
+    if (group.size() == 1) {
         int k = 1e9 + 1; // 최댓값 + 1
         for (int i=0; i<vy.size()-1; i++) {
             if (vy[i] < vy[i+1]-1) {
@@ -110,14 +111,14 @@ void solve() {
         } // 갱신되지 않았다면 20만개의 점이 모두 1차이로 붙어있다는 것이므로 가장 작은 y좌표가 -10억보다 크면
         // k는 가장 작은 y좌표-1, -10억이라면 가장 큰 y좌표+1 
         
-        cout << v[temp[0].first].first.first << ' ' << k << '\n';
+        cout << v[group[0].first].first.first << ' ' << k << '\n';
         return;
-    } // 모두 연결되어있다면 새로운 점이 연결되게끔만 만들어주면 된다
+    }
 
-    sort(temp.begin(), temp.end(), cmp); // value 순으로 내림차순 정렬
+    // 그룹이 2개 이상인 경우
+    sort(group.begin(), group.end(), cmp); // value 순으로 내림차순 정렬
     
-    cout << v[temp[0].first].first.first << ' ' << v[temp[1].first].first.second << '\n';
-    // 가장 큰 두 그룹을 연결해주는 점을 출력
+    cout << v[group[0].first].first.first << ' ' << v[group[1].first].first.second << '\n'; // 가장 큰 두 그룹을 연결해주는 점을 출력
 }
 
 int main() {
