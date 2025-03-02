@@ -11,7 +11,6 @@ using namespace std;
 
 int N;
 int parent[MAXN];
-int rk[MAXN];
 vector<pair<pair<int,int>, int>> v;
 
 int findParent(int a) {
@@ -23,16 +22,8 @@ void unionNode(int a, int b) {
     int pa = findParent(a);
     int pb = findParent(b);
 
-    if (pa != pb) {
-        if (rk[pa] > rk[pb]) {
-            parent[pb] = pa;
-        } else if (rk[pa] < rk[pb]) {
-            parent[pa] = pb;
-        } else {
-            parent[pb] = pa;
-            rk[pa]++;
-        }
-    }
+    if (pa <= pb) parent[pb] = pa;
+    else parent[pa] = pb;
 }
 
 bool cmpx(pair<pair<int,int>, int> a, pair<pair<int,int>, int> b) {
