@@ -25,7 +25,7 @@ void unionNode(int a, int b) {
 bool isConnected(const vector<int>& group) {
     if (group.empty()) return false;
 
-    for (int i = 1; i <= N; ++i)
+    for (int i = 1; i <= N; i++)
         parent[i] = i;
 
     for (int i : group) {
@@ -63,7 +63,7 @@ void bt(int last, vector<int> a) {
         answer = min(answer, abs(2 * poplA - total));
     }
 
-    for (int i = last + 1; i <= N; ++i) {
+    for (int i = last + 1; i <= N; i++) {
         a.push_back(i);
         bt(i, a);
         a.pop_back();
@@ -72,15 +72,15 @@ void bt(int last, vector<int> a) {
 
 void input() {
     cin >> N;
-    for (int i = 1; i <= N; ++i) {
+    for (int i = 1; i <= N; i++) {
         cin >> popl[i];
         total += popl[i];
     }
 
-    for (int i = 1; i <= N; ++i) {
+    for (int i = 1; i <= N; i++) {
         int neighbor;
         cin >> neighbor;
-        for (int j = 0; j < neighbor; ++j) {
+        for (int j = 0; j < neighbor; j++) {
             int num;
             cin >> num;
             graph[i][num] = true;
