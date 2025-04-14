@@ -3,48 +3,69 @@
 #include <queue>
 
 using namespace std;
+
 #define MAX 300
 
-int T,I;
-int current_x,current_y,target_x,target_y;
+int T, I;
+int currentX, currentY, targetX, targetY;
 int arr[MAX][MAX];
-bool visited[MAX][MAX];
 int dx[] = {1,2,2,1,-1,-2,-2,-1};
 int dy[] = {2,1,-1,-2,-2,-1,1,2};
 
 void bfs(int x,int y) {
     queue<pair<int,int>> q;
     q.push({x,y});
-    visited[x][y]=true;
+    arr[x][y] = 0;
+    
     while(!q.empty()) {
-        int a = q.front().first;
-        int b = q.front().second;
+        int cx = q.front().first;
+        int cy = q.front().second;
         q.pop();
-        if(a==target_x && b==target_y) {
-            cout <<arr[a][b] << "\n";
+
+        // 도착했으면 횟수 출력하고 return
+        if(cx == targetX && cy == targetY) {
+            cout << arr[cx][cy] << '\n';
             return;
         }
+
         for(int i=0;i<8;i++) {
-            int na = a + dx[i];
-            int nb = b + dy[i];
-            if(0<=na && 0<=nb && na <I && nb < I && !visited[na][nb]) {
-                q.push({na,nb});
-                visited[na][nb]=true;
-                arr[na][nb]=arr[a][b]+1;
-            }
+            int nx = cx + dx[i];
+            int ny = cy + dy[i];
+
+            // 배열 범위 밖으로 나가거나 이미 방문한 적 있는 경우 continue
+            if(nx < 0 || nx >= I || ny < 0 || ny >= I || arr[nx][ny] >= 0) continue;
+
+            q.push({nx, ny});
+            arr[nx][ny] = arr[cx][cy]+1;
         }
     }
 }
 
-int main() {
-    cin >> T;
-    for(int i=0;i<T;i++) {
-        memset(arr, 0, sizeof(arr));
-        memset(visited, false, sizeof(visited));
-        cin >> I;
-        cin >> current_x >> current_y;
-        cin >> target_x >> target_y;
+void init() {
+    memset(arr, -1, sizeof(arr));
+}
 
-        bfs(current_x,current_y);
+void input() {
+    cin >> I;
+    cin >> currentX >> currentY;
+    cin >> targetX >> targetY;
+}
+
+void solve() {
+    // bfs는 최단 경로를 보장한다.
+    bfs(currentX, currentY);
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> T;
+    while(T--) {
+        init();
+        input();
+        solve();
     }
+
+    return 0;
 }
