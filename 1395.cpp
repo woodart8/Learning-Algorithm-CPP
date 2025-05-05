@@ -21,7 +21,7 @@ void init() {
 void update_lazy(int node, int start, int end) {
     // 반전되어야하는 경우
     if (lazy[node] != 0) {
-        tree[node] = -1 * tree[node] + (end-start+1); // 스위치 반전
+        tree[node] = (end-start+1) - tree[node]; // 스위치 반전
         if (start != end) {
             // 자식 노드에 반전 내역 기록
             lazy[node*2] ^= 1;
@@ -40,7 +40,7 @@ void update(int node, int start, int end, int left, int right) {
 
     // 현재 구간이 [left, right] 내에 속한 경우
     if (left <= start && end <= right) {
-        tree[node] = -1 * tree[node] + (end-start+1); // 스위치 반전
+        tree[node] = (end-start+1) - tree[node]; // 스위치 반전
         // 자식 노드에 반전 내역 기록
         if (start != end) {
             lazy[node*2] ^= 1;
