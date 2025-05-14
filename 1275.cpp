@@ -24,11 +24,7 @@ long long query(int node, int start, int end, int left, int right) {
     return lval + rval;
 }
 
-int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-
+void init() {
     cin >> N >> Q;
     tree.resize(4*N);
     for (int i=1; i<=N; i++) {
@@ -36,7 +32,9 @@ int main() {
         cin >> num;
         update(1, 1, N, i, num);
     }
+}
 
+void solve() {
     for (int i=1; i<=Q; i++) {
         int x, y, a, b;
         cin >> x >> y >> a >> b;
@@ -44,6 +42,13 @@ int main() {
         cout << query(1, 1, N, x, y) << '\n';
         update(1, 1, N, a, b);
     }
+}
 
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    init();
+    solve();
     return 0;
 }
