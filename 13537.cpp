@@ -6,12 +6,11 @@ using namespace std;
 
 int N, M;
 vector<vector<int>> tree;
+vector<int> num;
 
-vector<int> mergeSort(const vector<int> a, const vector<int> b) {
+// 병합 정렬
+vector<int> mergeSort(const vector<int>& a, const vector<int>& b) {
     vector<int> ret;
-
-    if (a.empty()) return b;
-    if (b.empty()) return a;
 
     int i = 0, j = 0;
     while(i<a.size() && j<b.size()) {
@@ -31,16 +30,18 @@ vector<int> mergeSort(const vector<int> a, const vector<int> b) {
     return ret;
 }
 
-void makeTree(int node, int start, int end, const vector<int>& arr) {
+// 트리 초기화
+void makeTree(int node, int start, int end) {
     if (start == end) {
-        tree[node].push_back(arr[start]);
+        tree[node].push_back(num[start]);
         return;
     }
-    makeTree(node*2, start, (start+end)/2, arr);
-    makeTree(node*2+1, (start+end)/2+1, end, arr);
+    makeTree(node*2, start, (start+end)/2);
+    makeTree(node*2+1, (start+end)/2+1, end);
     tree[node] = mergeSort(tree[node*2], tree[node*2+1]);
 }
 
+// left-right 구간에서 val보다 큰 숫자 개수 찾기
 int query(int node, int start, int end, int left, int right, int val) {
     if (left > end || right < start) return 0;
     if (left <= start && end <= right) {
@@ -53,12 +54,12 @@ int query(int node, int start, int end, int left, int right, int val) {
 
 void init() {
     cin >> N;
-    vector<int> arr(N + 1);
-    for (int i = 1; i <= N; i++) {
-        cin >> arr[i];
+    num.resize(N+1);
+    for (int i=1; i<=N; i++) {
+        cin >> num[i];
     }
-    tree.resize(4 * N);
-    makeTree(1, 1, N, arr);
+    tree.resize(4*N);
+    makeTree(1, 1, N);
 }
 
 void solve() {
