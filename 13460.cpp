@@ -34,49 +34,43 @@ void move(int& rx, int& ry, int& distance, int& i) {
 	}
 }
 
-void bfs(State state) {
+int bfs(State state) {
 	queue<State> q;
 	q.push(state);
 	visited[state.rx][state.ry][state.bx][state.by] = true;
 	while (!q.empty()) {
-		int rx = q.front().rx;
-		int ry = q.front().ry;
-		int bx = q.front().bx;
-		int by = q.front().by;
-		int count = q.front().count;
+		State cur = q.front();
 		q.pop();
 
 		// 이동 횟수가 10번이 넘을 경우 break
-		if (count >= 10) break;
+		if (cur.count >= 10) break;
 
 		for (int i = 0; i < 4; i++) {
-			int nrx = rx, nry = ry, nbx = bx, nby = by;
-			int rc = 0, bc = 0, ncount = count + 1;
+			State next(cur.rx, cur.ry, cur.bx, cur.by, cur.count+1);
+			int rDist = 0, bDist = 0;
 
-			move(nrx, nry, rc, i);
-			move(nbx, nby, bc, i);
+			move(next.rx, next.ry, rDist, i);
+			move(next.bx, next.by, bDist, i);
 
 			// 파란 구슬이 구멍에 빠지면 실패
-			if (map[nbx][nby] == 'O') continue;
+			if (map[next.bx][next.by] == 'O') continue;
 
 			// 빨간 구슬이 구멍에 빠지면 성공
-			if (map[nrx][nry] == 'O') {
-				cout << ncount;
-				return;
-			}
+			if (map[next.rx][next.ry] == 'O') return next.count;
 
 			// 둘이 겹칠경우 이전 위치 고려해서 재배치
-			if (nrx == nbx && nry == nby) {
-				if (rc > bc) nrx -= dx[i], nry -= dy[i];
-				else nbx -= dx[i], nby -= dy[i];
+			if (next.rx == next.bx && next.ry == next.by) {
+				if (rDist > bDist) next.rx -= dx[i], next.ry -= dy[i];
+				else next.bx -= dx[i], next.by -= dy[i];
 			}
 
-			if (visited[nrx][nry][nbx][nby]) continue;
-			visited[nrx][nry][nbx][nby] = true;
-			q.push({nrx,nry,nbx,nby,ncount});
+			if (visited[next.rx][next.ry][next.bx][next.by]) continue;
+			visited[next.rx][next.ry][next.bx][next.by] = true;
+			q.push(next);
 		}
 	}
-	cout << -1;
+
+	return -1;
 }
 
 void input() {
@@ -95,7 +89,7 @@ void input() {
 
 void solve() {
 	State state(irx, iry, ibx, iby, 0);
-	bfs(state);
+	cout << bfs(state) << '\n';
 }
 
 int main() {
