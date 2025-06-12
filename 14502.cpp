@@ -10,6 +10,7 @@ int map[8][8];
 vector<pair<int,int>> virus;
 int answer;
 
+// 바이러스 퍼뜨리기
 void spreadVirus(int tempMap[8][8]) {
     int dx[] = {-1,1,0,0};
     int dy[] = {0,0,-1,1};
@@ -33,6 +34,7 @@ void spreadVirus(int tempMap[8][8]) {
     }
 }
 
+// 안전 구역 계산
 int calcSafeSpace(int tempMap[8][8]) {
     int count = 0;
     for(int i=0; i<N; i++)
@@ -41,6 +43,7 @@ int calcSafeSpace(int tempMap[8][8]) {
     return count;
 }
 
+// 백트래킹 (벽 세우기)
 void bt(int start, int count) {
     if (count == 3) {
         int tempMap[8][8];
