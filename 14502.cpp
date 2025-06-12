@@ -1,87 +1,85 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
+#include <cstring>
 using namespace std;
 
 int N, M;
-int map[9][9];
-int dx[] = {0, -1, 0 ,1};
-int dy[] = {1, 0, -1, 0};
-int ans;
+int map[8][8];
 vector<pair<int,int>> virus;
+int answer;
 
-int spreadVirus() {
-    int count = 0;
+void spreadVirus(int tempMap[8][8]) {
+    int dx[] = {-1,1,0,0};
+    int dy[] = {0,0,-1,1};
     queue<pair<int,int>> q;
-    for(int i=0; i<virus.size(); i++) {
-        q.push({virus[i].first, virus[i].second});
-    }
+
+    for (auto v : virus)
+        q.push(v);
 
     while(!q.empty()) {
-        int now_x = q.front().first;
-        int now_y = q.front().second;
+        int cx = q.front().first;
+        int cy = q.front().second;
         q.pop();
-        map[now_x][now_y] = 2;
 
         for(int i=0; i<4; i++) {
-            int next_x = now_x + dx[i];
-            int next_y = now_y + dy[i];
-            if(next_x < 1 || next_y < 1 || next_x > N || next_y > M || map[next_x][next_y] != 0) continue;
-            q.push({next_x,next_y});
+            int nx = cx + dx[i];
+            int ny = cy + dy[i];
+            if(nx < 0 || ny < 0 || nx >= N || ny >= M || tempMap[nx][ny] != 0) continue;
+            tempMap[nx][ny] = 2;
+            q.push({nx, ny});
         }
     }
+}
 
-    for(int i=1; i<=N; i++) {
-        for(int j=1; j<=M; j++) {
-            if(map[i][j] == 0) count++;
-        }
-    }
+int calcSafeSpace(int tempMap[8][8]) {
+    int count = 0;
+    for(int i=0; i<N; i++)
+        for(int j=0; j<M; j++)
+            if(tempMap[i][j] == 0) count++;
     return count;
 }
 
-void setWall(int count) {
-    if(count == 3) {
-        ans = max(ans, spreadVirus());
+void bt(int start, int count) {
+    if (count == 3) {
+        int tempMap[8][8];
+        memcpy(tempMap, map, sizeof(map));
+        spreadVirus(tempMap);
+        answer = max(answer, calcSafeSpace(tempMap));
         return;
     }
 
-    int copyMap[9][9];
-    for(int i=1; i<=N; i++) {
-        for(int j=1; j<=M; j++) {
-            copyMap[i][j] = map[i][j];
-        }
+    for (int i=start; i<N*M; i++) {
+        int x = i / M;
+        int y = i % M;
+        if (map[x][y] != 0) continue;
+        map[x][y] = 1;
+        bt(i+1, count+1);
+        map[x][y] = 0;
     }
+}
 
-    for(int i=1; i<=N; i++) {
-        for(int j=1; j<=M; j++) {
-            if(map[i][j] == 0) {
-                map[i][j] = 1;
-                setWall(count+1);
-                for(int r=1; r<=N; r++) {
-                    for(int c=1; c<=M; c++) {
-                        map[r][c] = copyMap[r][c];
-                    }
-                }
-            }
+void input() {
+    cin >> N >> M;
+    for(int i=0; i<N; i++) {
+        for(int j=0; j<M; j++) {
+            cin >> map[i][j];
+            if(map[i][j] == 2)
+                virus.push_back({i, j});
         }
     }
 }
 
-int simulation() {
-    setWall(0);
-    return ans;
+void solve() {
+    bt(0, 0);
+    cout << answer << '\n';
 }
 
 int main() {
-    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-    cin >> N >> M;
-    for(int i=1; i<=N; i++) {
-        for(int j=1; j<=M; j++) {
-            cin >> map[i][j];
-            if(map[i][j] == 2) virus.push_back({i,j});
-        }
-    }
-
-    cout << simulation();
+    ios::sync_with_stdio(0); 
+    cin.tie(0);
+    input();
+    solve();
     return 0;
 }
